@@ -15,30 +15,34 @@ interface GameCurrency {
   stock: number;
   icon: string;
   popular: boolean;
+  platform: 'PC' | 'Mobile';
 }
 
 const mockCurrencies: GameCurrency[] = [
-  { id: '1', game: 'Counter-Strike 2', currency: 'CS2 Coins', price: 1.25, stock: 10000, icon: '🔫', popular: true },
-  { id: '2', game: 'Dota 2', currency: 'Battle Points', price: 0.85, stock: 25000, icon: '⚔️', popular: true },
-  { id: '3', game: 'World of Warcraft', currency: 'WoW Gold', price: 2.50, stock: 5000, icon: '⚡', popular: true },
-  { id: '4', game: 'Fortnite', currency: 'V-Bucks', price: 1.50, stock: 15000, icon: '🏗️', popular: false },
-  { id: '5', game: 'Valorant', currency: 'VP Points', price: 1.10, stock: 8000, icon: '🎯', popular: false },
-  { id: '6', game: 'League of Legends', currency: 'RP Points', price: 0.95, stock: 20000, icon: '⚡', popular: true },
-  { id: '7', game: 'Standoff 2', currency: 'Gold', price: 0.75, stock: 12000, icon: '🏆', popular: false },
-  { id: '8', game: 'PUBG Mobile', currency: 'UC Points', price: 1.35, stock: 18000, icon: '🪂', popular: false },
-  { id: '9', game: 'Free Fire', currency: 'Diamonds', price: 0.65, stock: 22000, icon: '💎', popular: false },
-  { id: '10', game: 'Mobile Legends', currency: 'Diamonds', price: 0.80, stock: 16000, icon: '🛡️', popular: false },
+  { id: '1', game: 'Counter-Strike 2', currency: 'CS2 Coins', price: 1.25, stock: 10000, icon: '🔫', popular: true, platform: 'PC' },
+  { id: '2', game: 'Dota 2', currency: 'Battle Points', price: 0.85, stock: 25000, icon: '⚔️', popular: true, platform: 'PC' },
+  { id: '3', game: 'World of Warcraft', currency: 'WoW Gold', price: 2.50, stock: 5000, icon: '⚡', popular: true, platform: 'PC' },
+  { id: '4', game: 'Fortnite', currency: 'V-Bucks', price: 1.50, stock: 15000, icon: '🏗️', popular: false, platform: 'PC' },
+  { id: '5', game: 'Valorant', currency: 'VP Points', price: 1.10, stock: 8000, icon: '🎯', popular: false, platform: 'PC' },
+  { id: '6', game: 'League of Legends', currency: 'RP Points', price: 0.95, stock: 20000, icon: '⚡', popular: true, platform: 'PC' },
+  { id: '7', game: 'Standoff 2', currency: 'Gold', price: 0.75, stock: 12000, icon: '🏆', popular: false, platform: 'Mobile' },
+  { id: '8', game: 'PUBG Mobile', currency: 'UC Points', price: 1.35, stock: 18000, icon: '🪂', popular: false, platform: 'Mobile' },
+  { id: '9', game: 'Free Fire', currency: 'Diamonds', price: 0.65, stock: 22000, icon: '💎', popular: false, platform: 'Mobile' },
+  { id: '10', game: 'Mobile Legends', currency: 'Diamonds', price: 0.80, stock: 16000, icon: '🛡️', popular: false, platform: 'Mobile' },
 ];
 
 export default function Index() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCurrency, setSelectedCurrency] = useState<GameCurrency | null>(null);
+  const [selectedPlatform, setSelectedPlatform] = useState<'all' | 'PC' | 'Mobile'>('all');
   const { toast } = useToast();
 
-  const filteredCurrencies = mockCurrencies.filter(currency =>
-    currency.game.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    currency.currency.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredCurrencies = mockCurrencies.filter(currency => {
+    const matchesSearch = currency.game.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      currency.currency.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesPlatform = selectedPlatform === 'all' || currency.platform === selectedPlatform;
+    return matchesSearch && matchesPlatform;
+  });
 
   const popularCurrencies = mockCurrencies.filter(currency => currency.popular);
 
@@ -132,8 +136,8 @@ export default function Index() {
       </section>
 
       <main className="container mx-auto px-4 py-12">
-        {/* Search Section */}
-        <div className="mb-12">
+        {/* Search and Filter Section */}
+        <div className="mb-12 space-y-6">
           <div className="relative max-w-md mx-auto">
             <Icon name="Search" size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
             <Input
@@ -142,6 +146,39 @@ export default function Index() {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10 cyber-border focus:cyber-glow"
             />
+          </div>
+          
+          {/* Platform Filter */}
+          <div className="flex justify-center">
+            <div className="flex bg-card/50 rounded-lg p-1 cyber-border">
+              <Button
+                variant={selectedPlatform === 'all' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setSelectedPlatform('all')}
+                className={selectedPlatform === 'all' ? 'cyber-glow' : ''}
+              >
+                <Icon name="Grid3X3" size={16} className="mr-2" />
+                Все платформы
+              </Button>
+              <Button
+                variant={selectedPlatform === 'PC' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setSelectedPlatform('PC')}
+                className={selectedPlatform === 'PC' ? 'cyber-glow' : ''}
+              >
+                <Icon name="Monitor" size={16} className="mr-2" />
+                PC
+              </Button>
+              <Button
+                variant={selectedPlatform === 'Mobile' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setSelectedPlatform('Mobile')}
+                className={selectedPlatform === 'Mobile' ? 'cyber-glow' : ''}
+              >
+                <Icon name="Smartphone" size={16} className="mr-2" />
+                Mobile
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -175,6 +212,12 @@ export default function Index() {
                       <Icon name="Package" size={16} className="inline mr-1" />
                       {currency.stock.toLocaleString()} в наличии
                     </div>
+                  </div>
+                  <div className="flex items-center justify-between mb-3">
+                    <Badge variant="outline" className="text-xs">
+                      <Icon name={currency.platform === 'PC' ? 'Monitor' : 'Smartphone'} size={12} className="mr-1" />
+                      {currency.platform}
+                    </Badge>
                   </div>
                   <Button 
                     onClick={() => handlePurchase(currency)}
@@ -216,8 +259,14 @@ export default function Index() {
                       </div>
                     </CardHeader>
                     <CardContent className="pt-0">
-                      <div className="text-lg font-bold text-primary mb-2">
-                        ${currency.price}
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="text-lg font-bold text-primary">
+                          ${currency.price}
+                        </div>
+                        <Badge variant="outline" className="text-xs">
+                          <Icon name={currency.platform === 'PC' ? 'Monitor' : 'Smartphone'} size={10} className="mr-1" />
+                          {currency.platform}
+                        </Badge>
                       </div>
                       <Button 
                         size="sm" 
@@ -247,8 +296,14 @@ export default function Index() {
                       </div>
                     </CardHeader>
                     <CardContent className="pt-0">
-                      <div className="text-lg font-bold text-primary mb-2">
-                        ${currency.price}
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="text-lg font-bold text-primary">
+                          ${currency.price}
+                        </div>
+                        <Badge variant="outline" className="text-xs">
+                          <Icon name={currency.platform === 'PC' ? 'Monitor' : 'Smartphone'} size={10} className="mr-1" />
+                          {currency.platform}
+                        </Badge>
                       </div>
                       <Button 
                         size="sm" 
