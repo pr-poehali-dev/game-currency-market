@@ -24,6 +24,10 @@ const mockCurrencies: GameCurrency[] = [
   { id: '4', game: 'Fortnite', currency: 'V-Bucks', price: 1.50, stock: 15000, icon: '🏗️', popular: false },
   { id: '5', game: 'Valorant', currency: 'VP Points', price: 1.10, stock: 8000, icon: '🎯', popular: false },
   { id: '6', game: 'League of Legends', currency: 'RP Points', price: 0.95, stock: 20000, icon: '⚡', popular: true },
+  { id: '7', game: 'Standoff 2', currency: 'Gold', price: 0.75, stock: 12000, icon: '🏆', popular: false },
+  { id: '8', game: 'PUBG Mobile', currency: 'UC Points', price: 1.35, stock: 18000, icon: '🪂', popular: false },
+  { id: '9', game: 'Free Fire', currency: 'Diamonds', price: 0.65, stock: 22000, icon: '💎', popular: false },
+  { id: '10', game: 'Mobile Legends', currency: 'Diamonds', price: 0.80, stock: 16000, icon: '🛡️', popular: false },
 ];
 
 export default function Index() {
